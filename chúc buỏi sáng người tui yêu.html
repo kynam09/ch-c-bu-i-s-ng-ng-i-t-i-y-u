@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chào Buổi Sáng Tình Yêu Của Anh ❤️</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Inter & Dancing Script -->
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #1a1c29 0%, #2c163a 50%, #3a1c2c 100%);
+            color: #f3f4f6;
+            overflow-x: hidden;
+            min-height: 100vh;
+        }
+        .romantic-font {
+            font-family: 'Dancing Script', cursive;
+        }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+        }
+        .glass-btn {
+            background: rgba(255, 105, 180, 0.2);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 105, 180, 0.4);
+            transition: all 0.3s ease;
+        }
+        .glass-btn:hover {
+            background: rgba(255, 105, 180, 0.4);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(255, 105, 180, 0.3);
+        }
+        /* Floating hearts animation */
+        @keyframes floatUp {
+            0% {
+                transform: translateY(100vh) scale(0.5);
+                opacity: 0;
+            }
+            20% {
+                opacity: 0.8;
+            }
+            100% {
+                transform: translateY(-10vh) scale(1.2);
+                opacity: 0;
+            }
+        }
+        @keyframes burstUp {
+            0% {
+                transform: translateY(0) scale(0.6);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-220px) scale(1.6);
+                opacity: 0;
+            }
+        }
+        .heart-particle {
+            position: absolute;
+            color: rgba(255, 182, 193, 0.6);
+            animation: floatUp 6s linear infinite;
+            pointer-events: none;
+            z-index: 1;
+        }
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: rgba(0,0,0,0.1);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: rgba(255, 105, 180, 0.3);
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body class="relative flex flex-col items-center justify-center p-4 sm:p-6 min-h-screen">
+
+    <div id="hearts-container" class="absolute inset-0 overflow-hidden pointer-events-none"></div>
+
+    <!-- Nhạc nền đọc trực tiếp file nhac.mp3 để cùng thư mục -->
+    <audio id="bg-audio" loop preload="auto" src="nhac.mp3"></audio>
+
+    <header class="absolute top-4 right-4 z-20 flex items-center gap-3">
+        <button id="music-toggle" class="glass-btn px-4 py-2 rounded-full text-sm font-medium flex items-center gap-2 text-pink-200 shadow-lg">
+            <i id="music-icon" class="fa-solid fa-music"></i>
+            <span id="music-text">Phát Nhạc Lãng Mạn 🎵</span>
+        </button>
+    </header>
+
+    <main class="relative z-10 w-full max-w-xl mx-auto glass-card rounded-3xl p-6 sm:p-10 my-8 text-center flex flex-col items-center">
+        
+        <!-- Badge Greeting -->
+        <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-pink-500/10 border border-pink-500/25 text-pink-300 text-xs sm:text-sm font-medium mb-6">
+            <i class="fa-solid fa-sun text-yellow-300 animate-spin" style="animation-duration: 8s;"></i>
+            <span id="greeting-text">Chào buổi sáng bình yên!</span>
+        </div>
+
+        <!-- Realtime Clock -->
+        <div id="realtime-clock" class="text-3xl sm:text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-pink-300 via-purple-300 to-indigo-300 mb-2">
+            00:00:00
+        </div>
+        <div id="current-date" class="text-xs sm:text-sm text-gray-400 mb-8 font-medium">
+            Thứ Hai, Ngày 11 Tháng 10, 2026
+        </div>
+
+        <!-- Typing Effect Box -->
+        <div class="w-full bg-black/20 border border-white/5 rounded-2xl p-6 mb-8 min-h-[130px] flex items-center justify-center relative shadow-inner">
+            <div class="absolute top-3 left-4 text-pink-400/40 text-xs"><i class="fa-solid fa-quote-left"></i></div>
+            <p id="typing-output" class="romantic-font text-2xl sm:text-3xl text-pink-100 leading-relaxed px-4"></p>
+            <div class="absolute bottom-3 right-4 text-pink-400/40 text-xs"><i class="fa-solid fa-quote-right"></i></div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="flex flex-col sm:flex-row gap-4 w-full">
+            <button id="btn-surprise" class="flex-1 py-3.5 px-6 rounded-2xl bg-gradient-to-r from-pink-500 to-purple-600 hover:from-pink-600 hover:to-purple-700 font-semibold text-white shadow-lg shadow-pink-500/25 transition-all transform hover:-translate-y-0.5 flex items-center justify-center gap-2">
+                <i class="fa-solid fa-envelope-open-text"></i> Mở Bức Thư Bất Ngờ
+            </button>
+            <button id="btn-love" class="glass-btn flex-1 py-3.5 px-6 rounded-2xl font-semibold text-pink-200 flex items-center justify-center gap-2">
+                <i class="fa-solid fa-heart text-pink-400 animate-pulse"></i> Gửi Ngàn Tim
+            </button>
+        </div>
+
+    </main>
+
+    <!-- Modal Thư Tình -->
+    <div id="modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-md hidden opacity-0 transition-opacity duration-300">
+        <div class="glass-card w-full max-w-lg rounded-3xl p-6 sm:p-8 relative transform scale-95 transition-transform duration-300" id="modal-content">
+            <button id="close-modal" class="absolute top-5 right-5 text-gray-400 hover:text-white text-xl w-8 h-8 flex items-center justify-center rounded-full bg-white/10 transition">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+            <div class="text-center mb-4">
+                <div class="inline-block p-3 rounded-full bg-pink-500/20 text-pink-400 mb-2">
+                    <i class="fa-solid fa-heart-pulse text-2xl"></i>
+                </div>
+                <h3 class="romantic-font text-3xl sm:text-4xl text-pink-200">Gửi Nửa Kia Của Anh/Em</h3>
+            </div>
+            <div class="space-y-4 text-gray-300 text-sm sm:text-base leading-relaxed max-h-[60vh] overflow-y-auto pr-2">
+                <p class="font-bold text-pink-300">Người thương dấu yêu,</p>
+                <p>Mỗi sớm mai thức dậy, điều đầu tiên tui nghĩ đến chính là nụ cười rạng rỡ và ánh mắt ngọt ngào của sin. Cảm ơn sự xuất hiện của sin đã tô điểm cho thế giới của chúng ta trở nên ấm áp và nhiệm màu hơn bao giờ hết.</p>
+                <p>Hôm nay hãy luôn mỉm cười thật tươi, tự tin bước đi và biết rằng luôn có một người ở đây yêu thương, trân trọng và hướng về sin từng phút giây.</p>
+                <p class="text-right romantic-font text-2xl text-pink-300 pt-2">Yêu Nhã Phương nhiều lắm! ❤️</p>
+            </div>
+            <div class="mt-6 pt-4 border-t border-white/10 flex justify-end">
+                <button id="btn-close-modal" class="px-6 py-2 rounded-xl bg-pink-500/20 hover:bg-pink-500/40 text-pink-200 font-medium transition text-sm">
+                    Đóng Thư
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Floating Hearts Generator
+        function createHeart() {
+            const container = document.getElementById('hearts-container');
+            const heart = document.createElement('div');
+            heart.className = 'heart-particle';
+            heart.innerHTML = '<i class="fa-solid fa-heart"></i>';
+            
+            const size = Math.random() * 16 + 10;
+            heart.style.fontSize = `${size}px`;
+            heart.style.left = `${Math.random() * 100}vw`;
+            
+            const duration = Math.random() * 4 + 4;
+            heart.style.animationDuration = `${duration}s`;
+            
+            container.appendChild(heart);
+            setTimeout(() => {
+                heart.remove();
+            }, duration * 1000);
+        }
+        setInterval(createHeart, 500);
+
+        // Realtime Clock & Greeting logic
+        function updateClockAndGreeting() {
+            const now = new Date();
+            const hours = now.getHours();
+            const minutes = String(now.getMinutes()).padStart(2, '0');
+            const seconds = String(now.getSeconds()).padStart(2, '0');
+            
+            document.getElementById('realtime-clock').textContent = `${String(hours).padStart(2, '0')}:${minutes}:${seconds}`;
+            
+            const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+            document.getElementById('current-date').textContent = now.toLocaleDateString('vi-VN', options);
+            
+            let greeting = "Chào buổi sáng bình yên!";
+            if (hours >= 4 && hours < 11) {
+                greeting = "☀️ Chào buổi sáng tốt lành, nạp đầy năng lượng nhé!";
+            } else if (hours >= 11 && hours < 14) {
+                greeting = "🍱 Buổi trưa ấm áp, nghỉ ngơi thật ngon miệng nha!";
+            } else if (hours >= 14 && hours < 18) {
+                greeting = "☕ Buổi chiều dịu ngọt, cố gắng lên sắp xong việc rồi!";
+            } else {
+                greeting = "🌙 Buổi tối bình yên, chúc giấc mơ thật đẹp!";
+            }
+            document.getElementById('greeting-text').textContent = greeting;
+        }
+        setInterval(updateClockAndGreeting, 1000);
+        updateClockAndGreeting();
+
+        // Typing Effect for wishes (ĐÃ THÊM DẤU PHẨY ĐÚNG CÚ PHÁP)
+        const typingOutput = document.getElementById('typing-output');
+        
+        const wishes = [
+            "Chào buổi sáng tình yêu của tui! Chúc một ngày mới ngập tràn niềm vui và may mắn. ❤️",
+            "Dậy thôi người thương ơi! Chúc sin có một ngày làm việc thật hiệu quả và rạng rỡ. ✨",
+            "Mỗi ngày thức dậy được nhớ đến sin là điều hạnh phúc nhất. Chúc ngày mới ngọt ngào! 🌸",
+            "Buổi sáng tốt lành nhé yêu dấu! Hãy luôn mỉm cười thật tươi đón chào ngày mới nha. ☀️",
+            "Tui yêu Sin nhiều lắm, thương Sin thương rất nhiều. Tui vẫn sẽ luôn bên cạnh sin!!"
+        ];
+
+        let wishIndex = 0;
+        let charIndex = 0;
+        let currentWish = "";
+        let isDeleting = false;
+        let typingTimeout;
+
+        function typeWriter() {
+            const fullText = wishes[wishIndex];
+
+            if (isDeleting) {
+                currentWish = fullText.substring(0, charIndex - 1);
+                charIndex--;
+            } else {
+                currentWish = fullText.substring(0, charIndex + 1);
+                charIndex++;
+            }
+
+            typingOutput.textContent = currentWish;
+
+            let typingSpeed = isDeleting ? 30 : 60;
+
+            if (!isDeleting && charIndex === fullText.length) {
+                typingSpeed = 3500;
+                isDeleting = true;
+            } else if (isDeleting && charIndex === 0) {
+                isDeleting = false;
+                wishIndex = (wishIndex + 1) % wishes.length;
+                typingSpeed = 500;
+            }
+
+            typingTimeout = setTimeout(typeWriter, typingSpeed);
+        }
+        typeWriter();
+
+        // Modal Interactive Logic
+        const modal = document.getElementById('modal');
+        const modalContent = document.getElementById('modal-content');
+        const btnSurprise = document.getElementById('btn-surprise');
+        const closeModal = document.getElementById('close-modal');
+        const btnCloseModal = document.getElementById('btn-close-modal');
+
+        function openModal() {
+            modal.classList.remove('hidden');
+            setTimeout(() => {
+                modal.classList.remove('opacity-0');
+                modalContent.classList.remove('scale-95');
+                modalContent.classList.add('scale-100');
+            }, 10);
+        }
+
+        function closeMyModal() {
+            modal.classList.add('opacity-0');
+            modalContent.classList.remove('scale-100');
+            modalContent.classList.add('scale-95');
+            setTimeout(() => {
+                modal.classList.add('hidden');
+            }, 300);
+        }
+
+        btnSurprise.addEventListener('click', openModal);
+        closeModal.addEventListener('click', closeMyModal);
+        btnCloseModal.addEventListener('click', closeMyModal);
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) closeMyModal();
+        });
+
+        // Interactive "Gửi Ngàn Tim" button effect (Bắn tim từ nút bấm)
+        document.getElementById('btn-love').addEventListener('click', (e) => {
+            const rect = e.target.getBoundingClientRect();
+            const startX = rect.left + rect.width / 2;
+            const startY = rect.top;
+
+            for (let i = 0; i < 20; i++) {
+                setTimeout(() => {
+                    const container = document.getElementById('hearts-container');
+                    const heart = document.createElement('div');
+                    heart.className = 'heart-particle';
+                    heart.innerHTML = '<i class="fa-solid fa-heart" style="color: #ff4d94;"></i>';
+                    
+                    const size = Math.random() * 20 + 14;
+                    heart.style.fontSize = `${size}px`;
+                    heart.style.left = `${startX + (Math.random() - 0.5) * 180}px`;
+                    heart.style.top = `${startY}px`;
+                    heart.style.position = 'fixed';
+                    heart.style.animation = `burstUp 1.5s ease-out forwards`;
+                    
+                    container.appendChild(heart);
+                    setTimeout(() => heart.remove(), 1500);
+                }, i * 50);
+            }
+        });
+
+        // Điều khiển nhạc nền
+        const bgAudio = document.getElementById('bg-audio');
+        const musicToggleBtn = document.getElementById('music-toggle');
+        const musicIcon = document.getElementById('music-icon');
+        const musicText = document.getElementById('music-text');
+
+        let isPlayingMusic = false;
+
+        musicToggleBtn.addEventListener('click', () => {
+            if (!isPlayingMusic) {
+                bgAudio.play().then(() => {
+                    isPlayingMusic = true;
+                    musicIcon.className = "fa-solid fa-volume-high text-pink-400 animate-bounce";
+                    musicText.textContent = "Tắt Nhạc";
+                }).catch(err => {
+                    alert("Trình duyệt chặn phát nhạc tự động. Hãy bấm thêm 1 lần nữa vào nút phát nhạc nhé!");
+                });
+            } else {
+                bgAudio.pause();
+                isPlayingMusic = false;
+                musicIcon.className = "fa-solid fa-music";
+                musicText.textContent = "Phát Nhạc Lãng Mạn 🎵";
+            }
+        });
+    </script>
+</body>
+</html>
